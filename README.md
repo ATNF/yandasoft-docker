@@ -32,9 +32,29 @@ By default the WORKING IMAGE is yanda-dev:latest
 Note: the yanda user has sudo access in the container if you need to install anything. Note if you do change your environent and want it to stay you will need to save the running container.
 
 ```
-docker commit yanda-dev <repo>:tag
+docker commit yandasoft <repo>:tag
 ```
 
 You would be better off editing the DOckerfile for posterity or making your own,
+
+RECIPE
+
+Building YANDAsoft
+
+Well the image actually contains a working "develop tree" but to build your own tree you should either change the volume mount point from "." in the docker-compose.yml to whereever you have your checkout out tree. Then when you bring up the service (using start.py or docker-compose up -d) then you tree will be mounted at /data inside the 'container'
+
+The you can:
+
+```
+ssh -p 2223 yanda@localhost
+
+cd /data < this is bind mounted to your checked out repos >
+
+mkdir build-container <or any other name. remember dont use your actual build directory - this is a different OS ....>
+cd build-container
+cmake -DBUILD_ANALYSIS=OFF -DBUILD_PIPELINE=OFF -DBUILD_COMPONENTS=OFF -DBUILD_ANALYSIS=OFF -DBUILD_SERVICES=OFF -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . -j 4
+make install
+
 
 
